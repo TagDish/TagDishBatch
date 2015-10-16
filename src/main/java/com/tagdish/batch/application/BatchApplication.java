@@ -25,7 +25,7 @@ public class BatchApplication {
     		System.exit(0);
     	}
     	
-    	if(!args[0].equals("importDishJob")) {
+    	if(!(args[0].equals("importDishJob") || (args[0].equals("importZipCodeJob")))) {
     		System.out.println("Invalid job name!! Valid job name are importDishJob/importZipCodeJob");
     		System.out.println("Please use give the job name and format of the batch start 'BatchApplication <batchname>'");
     		System.out.println("Sample example 'BatchApplication importDishJob'");

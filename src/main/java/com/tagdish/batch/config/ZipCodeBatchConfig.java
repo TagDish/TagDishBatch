@@ -14,6 +14,7 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -27,9 +28,13 @@ import com.tagdish.domain.elasticsearch.ZipCode;
 @EnableBatchProcessing
 public class ZipCodeBatchConfig {
 
+	@Value("${zipcode.chunk.size}")
+	private int zipcodeChunkSize;		
+	
     @Bean
     public ItemReader<BatchZipCode> reader() {
         FlatFileItemReader<BatchZipCode> reader = new FlatFileItemReader<BatchZipCode>();
+        
         reader.setResource(new ClassPathResource("ZIP_CODES.txt"));
         reader.setLineMapper(new DefaultLineMapper<BatchZipCode>() {{
             setLineTokenizer(new DelimitedLineTokenizer() {{
@@ -71,7 +76,7 @@ public class ZipCodeBatchConfig {
     public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<BatchZipCode> reader,
             ItemWriter<ZipCode> writer, ItemProcessor<BatchZipCode, ZipCode> processor) {
         return stepBuilderFactory.get("step1")
-                .<BatchZipCode, ZipCode> chunk(10)
+                .<BatchZipCode, ZipCode> chunk(zipcodeChunkSize)
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)

@@ -34,6 +34,9 @@ public class DishBatchConfig {
 		
 	@Value("${dish.fetch.size}")
 	private int dishFetchSize;
+	
+	@Value("${dish.chunk.size}")
+	private int dishChunkSize;	
 
     @Bean
     public ItemReader<DishDB> dishItemReader() {
@@ -75,7 +78,7 @@ public class DishBatchConfig {
     public Step stepDish(StepBuilderFactory stepBuilderFactory, 
             ItemWriter<Dish> dishItemWriter, ItemReader<DishDB> dishItemReader, ItemProcessor<DishDB, Dish> dishItemProcessor) {
         return stepBuilderFactory.get("stepDish")
-                .<DishDB, Dish> chunk(10)
+                .<DishDB, Dish> chunk(dishChunkSize)
                 .reader(dishItemReader)
                 .processor(dishItemProcessor)
                 .writer(dishItemWriter)
