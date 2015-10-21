@@ -9,10 +9,10 @@ import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.tagdish.dao.repository.DishRepository;
+import com.tagdish.dao.repository.DishSearchRepository;
 
 public class BatchApplication {
 
@@ -32,7 +32,7 @@ public class BatchApplication {
     		System.exit(0);
     	}
     	    	
-    	ApplicationContext applicationContext = new ClassPathXmlApplicationContext("/application-context.xml");
+    	ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("/application-context.xml");
     	
     	JobLauncher jobLauncher = applicationContext.getBean(JobLauncher.class);
     	Job importJob = applicationContext.getBean(args[0], Job.class);
@@ -65,6 +65,9 @@ public class BatchApplication {
     	
 //		Test code    	
     	System.out.println(applicationContext.getBean(DishRepository.class).findByDishId(1l).getDishName());
+    	System.out.println(applicationContext.getBean(DishSearchRepository.class).findByDishId(1l).getZipCode());
 //    	System.out.println(applicationContext.getBean(ZipCodeRepository.class).findByCityAndState("Torrance", "CA").size());
+    	
+    	applicationContext.close();
     }
 }
