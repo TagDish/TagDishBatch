@@ -42,10 +42,14 @@ public class RestaurantBatchConfig {
     public ItemReader<AccountDB> restaurantItemReader() {
     	JdbcCursorItemReader<AccountDB> restaurantItemReader = new JdbcCursorItemReader<AccountDB>();
     	
-    	restaurantItemReader.setSql("Select * from Account where del = ?");
+    	restaurantItemReader.setSql("Select * from Account, Geotarget where Geotarget.adGroup_id = Account.id "
+    			+ "	where (account.createdDate is not null and account.updatedDate is null and account.createdDate > (sysdate() - 1)) or "
+    			+ "       (account.updatedDate is not null and account.updatedDate > (sysdate() - 1)) or "
+    			+ "       (Geotarget.createdDate is not null and Geotarget.updatedDate is null and Geotarget.createdDate > (sysdate() - 1)) or "
+    			+ "       (Geotarget.updatedDate is not null and Geotarget.updatedDate > (sysdate() - 1))");
     	restaurantItemReader.setDataSource(dataSource);
     	restaurantItemReader.setFetchSize(restaurantFetchSize);
-    	restaurantItemReader.setPreparedStatementSetter(new RestaurantPreparedStatementSetter());
+//    	restaurantItemReader.setPreparedStatementSetter(new RestaurantPreparedStatementSetter());
     	restaurantItemReader.setRowMapper(new AccountRowMapper());
 
         return restaurantItemReader;
