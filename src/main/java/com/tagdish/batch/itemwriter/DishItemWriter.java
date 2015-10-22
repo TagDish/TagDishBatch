@@ -46,7 +46,9 @@ public class DishItemWriter implements ItemWriter<Dish> {
 			dishSearchElasticSearch.setZipCode(90503l);
 		}
 		
-		dishSearchRepository.save(dishSearchElasticSearch);		
+		if(dish.getDeleteFlag() == 0) {
+			dishSearchRepository.save(dishSearchElasticSearch);	
+		}
 	}
 	
 	private void createDish(Dish dish) {
@@ -56,7 +58,9 @@ public class DishItemWriter implements ItemWriter<Dish> {
 		if(dishElasticSearch != null) {
 			dishRepository.delete(dishElasticSearch);
 		}
-		dishRepository.save(dish);		
+		if(dish.getDeleteFlag() == 0) {
+			dishRepository.save(dish);
+		}	
 	}
 
 }
