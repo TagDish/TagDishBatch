@@ -13,6 +13,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.tagdish.dao.repository.DishRepository;
 import com.tagdish.dao.repository.DishSearchRepository;
+import com.tagdish.dao.repository.RestaurantRepository;
 
 public class BatchApplication {
 
@@ -66,6 +67,7 @@ public class BatchApplication {
 //		Test code    	
     	System.out.println(applicationContext.getBean(DishRepository.class).findByDishId(1l).getDishName());
     	System.out.println(applicationContext.getBean(DishSearchRepository.class).findByDishId(1l).getZipCode());
+    	System.out.println(applicationContext.getBean(RestaurantRepository.class).findByRestaurantId(1l).getRestaurantName());
 //    	System.out.println(applicationContext.getBean(ZipCodeRepository.class).findByCityAndState("Torrance", "CA").size());
     	
     	applicationContext.close();

@@ -43,10 +43,12 @@ public class RestaurantBatchConfig {
     	JdbcCursorItemReader<AccountDB> restaurantItemReader = new JdbcCursorItemReader<AccountDB>();
     	
     	restaurantItemReader.setSql("Select * from Account, Geotarget where Geotarget.adGroup_id = Account.id "
-    			+ "	where (account.createdDate is not null and account.updatedDate is null and account.createdDate > (sysdate() - 1)) or "
-    			+ "       (account.updatedDate is not null and account.updatedDate > (sysdate() - 1)) or "
-    			+ "       (Geotarget.createdDate is not null and Geotarget.updatedDate is null and Geotarget.createdDate > (sysdate() - 1)) or "
-    			+ "       (Geotarget.updatedDate is not null and Geotarget.updatedDate > (sysdate() - 1))");
+    			+ "	and ("
+    			+ "		(account.createdDate is not null and account.updatedDate is null and account.createdDate > (CURDATE()-1)) or "
+    			+ "     (account.updatedDate is not null and account.updatedDate > (CURDATE()-1)) or "
+    			+ "     (Geotarget.createdDate is not null and Geotarget.updatedDate is null and Geotarget.createdDate > (CURDATE()-1)) or "
+    			+ "     (Geotarget.updatedDate is not null and Geotarget.updatedDate > (CURDATE()-1))"
+    			+ " ) ");
     	restaurantItemReader.setDataSource(dataSource);
     	restaurantItemReader.setFetchSize(restaurantFetchSize);
 //    	restaurantItemReader.setPreparedStatementSetter(new RestaurantPreparedStatementSetter());
@@ -54,6 +56,7 @@ public class RestaurantBatchConfig {
 
         return restaurantItemReader;
     }
+    
    
     @Bean
     public ItemProcessor<AccountDB, Restaurant> restaurantItemProcessor() {
