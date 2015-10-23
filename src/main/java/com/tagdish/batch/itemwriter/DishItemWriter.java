@@ -55,6 +55,7 @@ public class DishItemWriter implements ItemWriter<Dish> {
 		
 		Dish dishElasticSearch = null;
 		dishElasticSearch = dishRepository.getDishById(dish.getDishId());
+		
 		if(dishElasticSearch != null) {
 			dishRepository.delete(dishElasticSearch);
 		}

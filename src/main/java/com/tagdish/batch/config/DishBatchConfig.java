@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import com.tagdish.batch.itemprocessor.DishItemProcessor;
 import com.tagdish.batch.itemwriter.DishItemWriter;
 import com.tagdish.dao.jdbc.preparedstatementsetter.DishPreparedStatementSetter;
+import com.tagdish.dao.jdbc.rowmapper.AccountRowMapper;
 import com.tagdish.dao.jdbc.rowmapper.DishRowMapper;
 import com.tagdish.domain.db.DishDB;
 import com.tagdish.domain.elasticsearch.Dish;
@@ -42,11 +43,23 @@ public class DishBatchConfig {
     public ItemReader<DishDB> dishItemReader() {
     	JdbcCursorItemReader<DishDB> dishItemReader = new JdbcCursorItemReader<DishDB>();
     	
-    	dishItemReader.setSql("Select * from Dish where isActive = ?");
+//    	dishItemReader.setSql("Select * from Dish");
+    	dishItemReader.setSql("Select * from Dish, Menu, Account, GeoTarget where Geotarget.adGroup_id = Account.id and "
+    			+ " Account.id = Menu.Account_id and  Dish.menu_id = Menu.id and "
+    			+ " ( "
+    			+ "		(account.createdDate is not null and account.updatedDate is null and account.createdDate > (CURDATE()-1)) or "
+    			+ "     (account.updatedDate is not null and account.updatedDate > (CURDATE()-1)) or "
+    			+ "     (Geotarget.createdDate is not null and Geotarget.updatedDate is null and Geotarget.createdDate > (CURDATE()-1)) or "
+    			+ "     (Geotarget.updatedDate is not null and Geotarget.updatedDate > (CURDATE()-1)) or "
+    			+ "		(Menu.createdDate is not null and Menu.updatedDate is null and Menu.createdDate > (CURDATE()-1)) or "
+    			+ "     (Menu.updatedDate is not null and Menu.updatedDate > (CURDATE()-1)) or "
+    			+ "     (Dish.createdDate is not null and Dish.updatedDate is null and Dish.createdDate > (CURDATE()-1)) or "
+    			+ "     (Dish.updatedDate is not null and Dish.updatedDate > (CURDATE()-1)) "    			
+    			+ " )");
     	dishItemReader.setDataSource(dataSource);
     	dishItemReader.setFetchSize(dishFetchSize);
-    	dishItemReader.setPreparedStatementSetter(new DishPreparedStatementSetter());
-    	dishItemReader.setRowMapper(new DishRowMapper());
+//    	dishItemReader.setPreparedStatementSetter(new DishPreparedStatementSetter());
+    	dishItemReader.setRowMapper(new DishRowMapper(true, true, new AccountRowMapper(true)));
 
         return dishItemReader;
     }

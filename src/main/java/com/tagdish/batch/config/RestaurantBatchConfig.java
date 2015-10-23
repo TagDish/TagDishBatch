@@ -52,7 +52,7 @@ public class RestaurantBatchConfig {
     	restaurantItemReader.setDataSource(dataSource);
     	restaurantItemReader.setFetchSize(restaurantFetchSize);
 //    	restaurantItemReader.setPreparedStatementSetter(new RestaurantPreparedStatementSetter());
-    	restaurantItemReader.setRowMapper(new AccountRowMapper());
+    	restaurantItemReader.setRowMapper(new AccountRowMapper(true));
 
         return restaurantItemReader;
     }
